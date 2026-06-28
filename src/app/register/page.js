@@ -12,13 +12,10 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-
-  
- const validatePassword = (pass) => {
+  const validatePassword = (pass) => {
     if (pass.length < 6) return 'Password must be at least 6 characters';
     return null;
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -140,7 +137,7 @@ export default function RegisterPage() {
               }}
             />
             <p style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.3rem' }}>
-              Min 6 chars, one uppercase, one lowercase
+              Min 6 characters
             </p>
           </div>
 
