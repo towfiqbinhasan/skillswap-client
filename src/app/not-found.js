@@ -9,6 +9,8 @@ export default function NotFound() {
     setTimeout(() => setVisible(true), 100);
   }, []);
 
+
+  
   return (
     <div style={{
       minHeight: '80vh',
