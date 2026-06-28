@@ -12,6 +12,8 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+
+  
   const validatePassword = (pass) => {
     if (pass.length < 6) return 'Password must be at least 6 characters';
     if (!/[A-Z]/.test(pass)) return 'Password must have at least one uppercase letter';
