@@ -1,68 +1,41 @@
-import { betterAuth } from 'better-auth';
-import { mongodbAdapter } from 'better-auth/adapters/mongodb';
-import { MongoClient } from 'mongodb';
+import axios from 'axios';
 
-const client = new MongoClient(process.env.MONGODB_URI);
-const db = client.db('skillswap');
-
-export const auth = betterAuth({
-  database: mongodbAdapter(db, {
-    client,
-    collectionNames: {
-      user: 'users',
-      session: 'sessions',
-      account: 'accounts',
-      verification: 'verifications',
-    },
-  }),
-
-  secret: process.env.BETTER_AUTH_SECRET,
-  baseURL: 'https://skillswap-client-2ngr.vercel.app',
-
-  emailAndPassword: {
-    enabled: true,
-    minPasswordLength: 6,
-  },
-
-  socialProviders: {
-    google: {
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    },
-  },
-
-  user: {
-    additionalFields: {
-      role: {
-        type: 'string',
-        defaultValue: 'client',
-        input: true,
-      },
-      skills: {
-        type: 'string[]',
-        required: false,
-      },
-      bio: {
-        type: 'string',
-        required: false,
-      },
-      hourlyRate: {
-        type: 'number',
-        required: false,
-      },
-      isBlocked: {
-        type: 'boolean',
-        defaultValue: false,
-      },
-    },
-  },
-
-  callbacks: {
-    async signIn({ user, account }) {
-      if (account?.provider === 'google') {
-        user.role = 'client';
-      }
-      return true;
-    },
-  },
+const axiosInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api',
+  withCredentials: true,
 });
+
+// Session token cache
+let cachedToken = null;
+let tokenExpiry = null;
+
+const getSessionToken = async () => {
+  try {
+    // Cache check
+    if (cachedToken && tokenExpiry && new Date() < tokenExpiry) {
+      return cachedToken;
+    }
+    const res = await fetch('https://skillswap-client-2ngr.vercel.app/api/auth/get-session');
+    const data = await res.json();
+    if (data?.session?.token) {
+      cachedToken = data.session.token;
+      tokenExpiry = new Date(data.session.expiresAt);
+      return cachedToken;
+    }
+  } catch (err) {
+    console.error('Failed to get session token:', err);
+  }
+  return null;
+};
+
+axiosInstance.interceptors.request.use(async (config) => {
+  try {
+    const token = await getSessionToken();
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+  } catch (err) {}
+  return config;
+});
+
+export default axiosInstance;
