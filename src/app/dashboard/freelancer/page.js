@@ -16,6 +16,9 @@ export default function FreelancerDashboard() {
   const [success, setSuccess] = useState('');
   const { data: session, isPending } = useSession();
 
+
+
+  
   useEffect(() => {
     if (isPending) return;
     if (!session?.user) { router.push('/login'); return; }
