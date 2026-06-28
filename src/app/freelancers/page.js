@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import axiosInstance from '@/lib/axios';
 
+
+
 export default function BrowseFreelancersPage() {
   const [freelancers, setFreelancers] = useState([]);
   const [loading, setLoading] = useState(true);
