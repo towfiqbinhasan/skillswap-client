@@ -1,12 +1,12 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import axiosInstance from '@/lib/axios';
 
 const CATEGORIES = ['All', 'Design', 'Writing', 'Development', 'Marketing', 'Other'];
 
-export default function BrowseTasksPage() {
+function BrowseTasksContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -318,5 +318,17 @@ export default function BrowseTasksPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function BrowseTasksPage() {
+  return (
+    <Suspense fallback={
+      <div style={{ textAlign: 'center', padding: '4rem', color: '#94a3b8' }}>
+        Loading tasks...
+      </div>
+    }>
+      <BrowseTasksContent />
+    </Suspense>
   );
 }

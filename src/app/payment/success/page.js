@@ -1,10 +1,10 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import axiosInstance from '@/lib/axios';
 
-export default function PaymentSuccessPage() {
+function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
 
@@ -163,5 +163,17 @@ export default function PaymentSuccessPage() {
         </Link>
       </div>
     </div>
+  );
+}
+
+export default function PaymentSuccessPage() {
+  return (
+    <Suspense fallback={
+      <div style={{ textAlign: 'center', padding: '5rem', color: '#94a3b8' }}>
+        Loading...
+      </div>
+    }>
+      <PaymentSuccessContent />
+    </Suspense>
   );
 }
