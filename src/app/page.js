@@ -9,7 +9,6 @@ export default function Home() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // Trigger fade-in animation on load
     setTimeout(() => setVisible(true), 100);
     axiosInstance.get('/tasks/latest').then(res => setTasks(res.data)).catch(() => {});
     axiosInstance.get('/users/top-freelancers').then(res => setFreelancers(res.data)).catch(() => {});
@@ -26,8 +25,8 @@ export default function Home() {
         overflow: 'hidden'
       }}>
         <div style={{
-          opacity: visible ? 1 : 0,
-          transform: visible ? 'translateY(0)' : 'translateY(30px)',
+          opacity: 1,
+          transform: 'translateY(0)',
           transition: 'opacity 0.7s ease, transform 0.7s ease'
         }}>
           <h1 style={{
@@ -135,8 +134,7 @@ export default function Home() {
                 background: '#f8fafc', borderRadius: '14px', padding: '1.5rem',
                 boxShadow: '0 2px 8px rgba(0,0,0,0.06)', border: '1px solid #e2e8f0',
                 transition: 'transform 0.25s, box-shadow 0.25s',
-                opacity: visible ? 1 : 0,
-                animation: visible ? `fadeUp 0.5s ease ${i * 0.08}s both` : 'none'
+                animation: `fadeUp 0.5s ease ${i * 0.08}s both`
               }}
                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,0,0,0.1)'; }}
                 onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)'; }}
@@ -213,8 +211,7 @@ export default function Home() {
                 background: '#fff', borderRadius: '14px', padding: '1.8rem',
                 textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
                 border: '1px solid #e2e8f0', transition: 'transform 0.25s, box-shadow 0.25s',
-                opacity: visible ? 1 : 0,
-                animation: visible ? `fadeUp 0.5s ease ${i * 0.08}s both` : 'none'
+                animation: `fadeUp 0.5s ease ${i * 0.08}s both`
               }}
                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,0,0,0.1)'; }}
                 onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)'; }}
@@ -245,11 +242,23 @@ export default function Home() {
                     }}>{skill}</span>
                   ))}
                 </div>
-                {f.hourlyRate && (
-                  <p style={{ color: '#38bdf8', fontWeight: '700', fontSize: '0.9rem' }}>
-                    ${f.hourlyRate}/hr
-                  </p>
-                )}
+                <div style={{ display: 'flex', gap: '0.8rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                  {f.hourlyRate && (
+                    <p style={{ color: '#38bdf8', fontWeight: '700', fontSize: '0.9rem', margin: 0 }}>
+                      ${f.hourlyRate}/hr
+                    </p>
+                  )}
+                  {f.avgRating > 0 && (
+                    <p style={{ color: '#f59e0b', fontWeight: '700', fontSize: '0.9rem', margin: 0 }}>
+                      ⭐ {f.avgRating?.toFixed(1)}
+                    </p>
+                  )}
+                  {f.completedJobs > 0 && (
+                    <p style={{ color: '#64748b', fontSize: '0.82rem', margin: 0 }}>
+                      ✅ {f.completedJobs} jobs
+                    </p>
+                  )}
+                </div>
               </div>
             ))}
           </div>
