@@ -14,12 +14,11 @@ export default function RegisterPage() {
 
 
   
-  const validatePassword = (pass) => {
+ const validatePassword = (pass) => {
     if (pass.length < 6) return 'Password must be at least 6 characters';
-    if (!/[A-Z]/.test(pass)) return 'Password must have at least one uppercase letter';
-    if (!/[a-z]/.test(pass)) return 'Password must have at least one lowercase letter';
     return null;
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
