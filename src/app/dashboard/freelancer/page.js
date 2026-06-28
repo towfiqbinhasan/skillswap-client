@@ -19,6 +19,8 @@ export default function FreelancerDashboard() {
 
 
   
+
+
   useEffect(() => {
     if (isPending) return;
     if (!session?.user) { router.push('/login'); return; }
