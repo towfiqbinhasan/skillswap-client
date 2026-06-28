@@ -1,21 +1,18 @@
 import axios from 'axios';
-import { authClient } from './auth-client';
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api',
   withCredentials: true,
 });
 
-// Request interceptor — session token header এ পাঠাও
 axiosInstance.interceptors.request.use(async (config) => {
   try {
-    const session = await authClient.getSession();
-    if (session?.data?.session?.token) {
-      config.headers['Authorization'] = `Bearer ${session.data.session.token}`;
+    const res = await fetch('/api/auth/get-session');
+    const data = await res.json();
+    if (data?.session?.token) {
+      config.headers['Authorization'] = `Bearer ${data.session.token}`;
     }
-  } catch (err) {
-    // session নেই
-  }
+  } catch (err) {}
   return config;
 });
 
