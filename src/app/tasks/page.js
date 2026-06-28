@@ -330,5 +330,8 @@ export default function BrowseTasksPage() {
     }>
       <BrowseTasksContent />
     </Suspense>
-  );
+ 
+
+
+);
 }
