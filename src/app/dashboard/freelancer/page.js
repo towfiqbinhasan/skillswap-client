@@ -73,7 +73,7 @@ export default function FreelancerDashboard() {
     earnings: earnings.reduce((sum, e) => sum + e.amount, 0)
   };
 
-  const activeProposals = proposals.filter(p => p.status === 'accepted' && p.task_id?.status === 'in-progress');
+ const activeProposals = proposals.filter(p => p.status === 'accepted');
 
   return (
     <div style={{ display: 'flex', minHeight: '80vh' }}>
