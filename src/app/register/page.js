@@ -12,8 +12,12 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+
+  
   const validatePassword = (pass) => {
     if (pass.length < 6) return 'Password must be at least 6 characters';
+    if (!/[A-Z]/.test(pass)) return 'Password must have at least one uppercase letter';
+    if (!/[a-z]/.test(pass)) return 'Password must have at least one lowercase letter';
     return null;
   };
 
@@ -137,7 +141,7 @@ export default function RegisterPage() {
               }}
             />
             <p style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.3rem' }}>
-              Min 6 characters
+              Min 6 chars, one uppercase, one lowercase
             </p>
           </div>
 
