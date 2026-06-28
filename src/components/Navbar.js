@@ -169,7 +169,11 @@ export default function Navbar() {
           ) : null}
         </div>
       </div>
+   
 
+
+
+   
       {/* Overlay — closes menu when clicked outside */}
       {mobileOpen && (
         <div
