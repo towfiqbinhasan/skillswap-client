@@ -22,7 +22,13 @@ export default function Navbar() {
     return '/dashboard/client';
   };
 
-  const navLinks = [
+  const getProfileLink = () => {
+    if (user?.role === 'freelancer') return `/freelancers/${user.id}`;
+    return '/dashboard/client';
+  };
+
+  const publicLinks = [
+    { href: '/', label: 'Home' },
     { href: '/tasks', label: 'Browse Tasks' },
     { href: '/freelancers', label: 'Freelancers' },
   ];
@@ -56,22 +62,52 @@ export default function Navbar() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}
           className="desktop-nav"
         >
-          {navLinks.map(link => (
+          {publicLinks.map(link => (
             <Link key={link.href} href={link.href} style={{
-              color: '#cbd5e1', textDecoration: 'none', fontSize: '0.95rem'
-            }}>{link.label}</Link>
+              color: '#cbd5e1', textDecoration: 'none', fontSize: '0.95rem',
+              transition: 'color 0.2s'
+            }}
+              onMouseEnter={e => e.target.style.color = '#38bdf8'}
+              onMouseLeave={e => e.target.style.color = '#cbd5e1'}
+            >{link.label}</Link>
           ))}
 
           {!isPending && user ? (
             <>
               <Link href={getDashboardLink()} style={{
-                color: '#cbd5e1', textDecoration: 'none', fontSize: '0.95rem'
-              }}>Dashboard</Link>
+                color: '#cbd5e1', textDecoration: 'none', fontSize: '0.95rem',
+                transition: 'color 0.2s'
+              }}
+                onMouseEnter={e => e.target.style.color = '#38bdf8'}
+                onMouseLeave={e => e.target.style.color = '#cbd5e1'}
+              >Dashboard</Link>
+
+              {/* ── NEW: Profile link ── */}
+              <Link href={getProfileLink()} style={{
+                color: '#cbd5e1', textDecoration: 'none', fontSize: '0.95rem',
+                display: 'flex', alignItems: 'center', gap: '0.4rem',
+                transition: 'color 0.2s'
+              }}
+                onMouseEnter={e => { e.currentTarget.style.color = '#38bdf8'; }}
+                onMouseLeave={e => { e.currentTarget.style.color = '#cbd5e1'; }}
+              >
+                <img
+                  src={user?.image || `https://i.pravatar.cc/32?u=${user?.email}`}
+                  alt="profile"
+                  style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #38bdf8' }}
+                />
+                Profile
+              </Link>
+
               <button onClick={handleLogout} style={{
                 background: '#ef4444', color: '#fff', border: 'none',
                 padding: '0.4rem 1rem', borderRadius: '6px',
-                cursor: 'pointer', fontSize: '0.9rem'
-              }}>Logout</button>
+                cursor: 'pointer', fontSize: '0.9rem',
+                transition: 'background 0.2s'
+              }}
+                onMouseEnter={e => e.target.style.background = '#dc2626'}
+                onMouseLeave={e => e.target.style.background = '#ef4444'}
+              >Logout</button>
             </>
           ) : !isPending && !user ? (
             <Link href="/login" style={{
@@ -123,14 +159,14 @@ export default function Navbar() {
         background: '#0f172a',
         zIndex: 190,
         overflow: 'hidden',
-        maxHeight: mobileOpen ? '400px' : '0',
+        maxHeight: mobileOpen ? '500px' : '0',
         transition: 'max-height 0.35s ease',
         boxShadow: '0 8px 20px rgba(0,0,0,0.4)'
       }}
         className="mobile-menu"
       >
         <div style={{ padding: '1rem 2rem', display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
-          {navLinks.map(link => (
+          {publicLinks.map(link => (
             <Link key={link.href} href={link.href}
               onClick={() => setMobileOpen(false)}
               style={{
@@ -151,6 +187,15 @@ export default function Navbar() {
                 }}>
                 Dashboard
               </Link>
+              {/* Mobile Profile link */}
+              <Link href={getProfileLink()}
+                onClick={() => setMobileOpen(false)}
+                style={{
+                  color: '#cbd5e1', textDecoration: 'none', fontSize: '1rem',
+                  padding: '0.8rem 0', borderBottom: '1px solid #1e293b', display: 'block'
+                }}>
+                👤 Profile
+              </Link>
               <button onClick={handleLogout} style={{
                 background: '#ef4444', color: '#fff', border: 'none',
                 padding: '0.7rem', borderRadius: '8px',
@@ -169,12 +214,8 @@ export default function Navbar() {
           ) : null}
         </div>
       </div>
-   
 
-
-
-   
-      {/* Overlay — closes menu when clicked outside */}
+      {/* Overlay */}
       {mobileOpen && (
         <div
           onClick={() => setMobileOpen(false)}
