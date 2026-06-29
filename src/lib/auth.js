@@ -5,18 +5,21 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-// Session token cache
 let cachedToken = null;
 let tokenExpiry = null;
 
 const getSessionToken = async () => {
   try {
-    // Cache check
     if (cachedToken && tokenExpiry && new Date() < tokenExpiry) {
       return cachedToken;
     }
-    const res = await fetch('https://skillswap-client-2ngr.vercel.app/api/auth/get-session');
-    const data = await res.json();
+    const res = await fetch('/api/auth/get-session');
+    
+    // empty response check
+    const text = await res.text();
+    if (!text) return null;
+    
+    const data = JSON.parse(text);
     if (data?.session?.token) {
       cachedToken = data.session.token;
       tokenExpiry = new Date(data.session.expiresAt);
