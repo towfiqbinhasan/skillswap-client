@@ -5,17 +5,16 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-// Session token cache
 let cachedToken = null;
 let tokenExpiry = null;
 
 const getSessionToken = async () => {
   try {
-    // Cache check
     if (cachedToken && tokenExpiry && new Date() < tokenExpiry) {
       return cachedToken;
     }
-    const res = await fetch('https://skillswap-client-2ngr.vercel.app/api/auth/get-session');
+    // ← Fix: hardcoded URL সরিয়ে relative URL দিলাম
+    const res = await fetch('/api/auth/get-session');
     const data = await res.json();
     if (data?.session?.token) {
       cachedToken = data.session.token;

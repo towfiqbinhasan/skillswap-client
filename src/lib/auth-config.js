@@ -1,11 +1,19 @@
 import { betterAuth } from 'better-auth';
 import { MongoClient } from 'mongodb';
 
-const client = new MongoClient(process.env.MONGODB_URI);
+// Singleton pattern — serverless-এ connection reuse করে
+let client;
+let clientPromise;
+
+if (!global._mongoClientPromise) {
+  client = new MongoClient(process.env.MONGODB_URI);
+  global._mongoClientPromise = client.connect();
+}
+clientPromise = global._mongoClientPromise;
 
 export const auth = betterAuth({
   database: {
-    db: client.db(),
+    db: (await clientPromise).db(),   // ← এটাই আসল fix, connected db দিচ্ছে
     type: 'mongodb',
   },
   emailAndPassword: {
